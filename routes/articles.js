@@ -6,11 +6,21 @@ router.get('/', async function(req, res, next) {
   });
    
   router.post('/',async function(req, res, next) {
-    res.send( articlesRepo.addArticle(req.body.article) )
+    const { role } = req.user;
+    if(role == "admin" || role == "author"){
+      res.send( articlesRepo.addArticle(req.body.article) )
+    }else{
+      res.status(403).json({ message: 'unauthorised access!' })
+    }  
   });
   
   router.put('/',async function(req, res, next) {
-    res.send( articlesRepo.updateArticle(req.body.article) )
+    const { role } = req.user;
+    if(role == "admin" || role == "author"){
+      res.send( articlesRepo.updateArticle(req.body.article) )
+    }else{
+      res.status(403).json({ message: 'unauthorised access!' })
+    }
   });
   
   router.get('/count',async function(req, res, next) {
@@ -34,7 +44,12 @@ router.get('/', async function(req, res, next) {
   });
   
   router.delete('/:id',async function(req, res, next) {
+    const { role } = req.user;
+  if(role == "admin" || role == "author"){
     res.send( articlesRepo.deleteArticle(req.params.id) );
+  }else{
+    res.status(403).json({ message: 'unauthorised access!' })
+  }
   });
   
   

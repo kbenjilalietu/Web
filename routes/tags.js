@@ -7,12 +7,21 @@ router.get('/', async function(req, res, next) {
 });
  
 router.post('/',async function(req, res, next) {
-  res.send( tagsRepo.addTag(req.body.tag) )
+  const { role } = req.user;
+  if(role == "admin" || role == "author"){
+    res.send( tagsRepo.addTag(req.body.tag) )
+  }else{
+    res.status(403).json({ message: 'unauthorised access!' })
+  }
 });
 
 router.put('/',async function(req, res, next) {
-  res.send( tagsRepo.updateTag(req.body.tag) )
-
+  const { role } = req.user;
+  if(role == "admin" || role == "author"){
+    res.send( tagsRepo.updateTag(req.body.tag) )
+  }else{
+    res.status(403).json({ message: 'unauthorised access!' })
+  }
 });
 
 router.get('/:id',async function(req, res, next) {
@@ -25,7 +34,12 @@ router.get('/:id/articles',async function(req, res, next) {
 });
 
 router.delete('/:id',async function(req, res, next) {
-  res.send( commentsRepo.deleteTag(req.params.id) );
+  const { role } = req.user;
+  if(role == "admin" || role == "author"){
+    res.send( commentsRepo.deleteTag(req.params.id) );
+  }else{
+    res.status(403).json({ message: 'unauthorised access!' })
+  }
 });
 
 
